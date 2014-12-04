@@ -51,8 +51,17 @@ function settings_page() {
             $entry_array = array("linkUrl" => $linkUrl, "largeImg" => $largeImg, "smallImg" => $smallImg);
             array_push( $gp_banner_widget_options, $entry_array );
         }  
+
+        if (!empty($_POST["largeIMG_" . $count])) {
+            $linkUrl = $_POST["linkURL_" . $count];
+            $largeImg = $_POST["largeIMG_" . $count];
+            $smallImg = $_POST["smallIMG_" . $count];
+
+            $entry_array = array("linkUrl" => $linkUrl, "largeImg" => $largeImg, "smallImg" => $smallImg);
+
+            array_push( $gp_banner_widget_options, $entry_array );
+        }
         update_option( 'gp-banner-widget-settings', $gp_banner_widget_options );
-        #delete_option( 'gp-banner-widget-settings' );
     } 
 
     if (isset($_POST['add_entry'])) {
