@@ -1,6 +1,11 @@
 <?php
 /*
 Plugin Name: Gracepoint Banner Widget
+Plugin URI:https://github.com/michaelshuh/gp-banner
+Description: Plugin to do an "Apple" style rotating image banner in wordpress
+Version: 1.1
+Author: Michael Shuh
+Author URI:https://github.com/michaelshuh
 
 /* License
 
@@ -23,7 +28,7 @@ Plugin Name: Gracepoint Banner Widget
 include_once dirname( __FILE__ ) . '/gp-banner-widget.php';
 
 function add_settings_page() {
-	add_options_page('GP Banner Widget', 'GP Banner Widget', 'manage_options', 'gp-banner.php', 'settings_page'); 
+    add_options_page('GP Banner Widget', 'GP Banner Widget', 'manage_options', 'gp-banner.php', 'settings_page'); 
 }
 
 function settings_page() {
@@ -33,89 +38,92 @@ function settings_page() {
     if ( empty($gp_banner_widget_options) ) {
         $gp_banner_widget_options = array();
     }   
-	
-	if (isset($_POST['info_update'])) {
-	    $count = count( $gp_banner_widget_options );
-	    $gp_banner_widget_options = array();
-	    
-	    for( $i = 0; $i < $count; $i++ ) {
-	        $linkUrl = $_POST["linkURL_" . $i];
-    	    $largeImg = $_POST["largeIMG_" . $i];
-    	    $smallImg = $_POST["smallIMG_" . $i];
+    
+    if (isset($_POST['info_update'])) {
+        $count = count( $gp_banner_widget_options );
+        $gp_banner_widget_options = array();
+        
+        for( $i = 0; $i < $count; $i++ ) {
+            $linkUrl = $_POST["linkURL_" . $i];
+            $largeImg = $_POST["largeIMG_" . $i];
+            $smallImg = $_POST["smallIMG_" . $i];
 
-    	    $entry_array = array("linkUrl" => $linkUrl, "largeImg" => $largeImg, "smallImg" => $smallImg);
-    	    array_push( $gp_banner_widget_options, $entry_array );
-	    }  
-		update_option( 'gp-banner-widget-settings', $gp_banner_widget_options );
-		#delete_option( 'gp-banner-widget-settings' );
-	} 
+            $entry_array = array("linkUrl" => $linkUrl, "largeImg" => $largeImg, "smallImg" => $smallImg);
+            array_push( $gp_banner_widget_options, $entry_array );
+        }  
+        update_option( 'gp-banner-widget-settings', $gp_banner_widget_options );
+        #delete_option( 'gp-banner-widget-settings' );
+    } 
 
-	if (isset($_POST['add_entry'])) {
-	    $count = count($gp_banner_widget_options);
-	    
-	    $linkUrl = $_POST["linkURL_" . $count];
-	    $largeImg = $_POST["largeIMG_" . $count];
-	    $smallImg = $_POST["smallIMG_" . $count];
-	    
-	    $entry_array = array("linkUrl" => $linkUrl, "largeImg" => $largeImg, "smallImg" => $smallImg);
-	    
-	    array_push( $gp_banner_widget_options, $entry_array );
-	    
-	    update_option( 'gp-banner-widget-settings', $gp_banner_widget_options);
-	}
-	
-	if (isset($_POST['delete_entry'])) {
-	    $entry_id = $_POST['delete_entry'];
-	    unset($gp_banner_widget_options[$entry_id]);
-	    
-	    $gp_banner_widget_options = array_values($gp_banner_widget_options);
-	    
-	    update_option( 'gp-banner-widget-settings', $gp_banner_widget_options );
-	}
-	
-	?>
-		<div class="wrap">
+    if (isset($_POST['add_entry'])) {
+        $count = count($gp_banner_widget_options);
+        
+        $linkUrl = $_POST["linkURL_" . $count];
+        $largeImg = $_POST["largeIMG_" . $count];
+        $smallImg = $_POST["smallIMG_" . $count];
+        
+        $entry_array = array("linkUrl" => $linkUrl, "largeImg" => $largeImg, "smallImg" => $smallImg);
+        
+        array_push( $gp_banner_widget_options, $entry_array );
+        
+        update_option( 'gp-banner-widget-settings', $gp_banner_widget_options);
+    }
+    
+    if (isset($_POST['delete_entry'])) {
+        $entry_id = $_POST['delete_entry'];
+        unset($gp_banner_widget_options[$entry_id]);
+        
+        $gp_banner_widget_options = array_values($gp_banner_widget_options);
+        
+        update_option( 'gp-banner-widget-settings', $gp_banner_widget_options );
+    }
+    
+    ?>
+        <div class="wrap">
             <h2>GP Banner Widget</h2>
-			<form method="post" action="options-general.php?page=gp-banner.php" id="gp-banner-widget-settings">
+            <form method="post" action="options-general.php?page=gp-banner.php" id="gp-banner-widget-settings">
 
-			<h3>Gracepoint Banner Settings</h3>
-			<table class="form-table">
-			    <tr valign="top">
-			        <th>Link URL</th>
-			        <th>Large Image</th>
-			        <th>Small Image</th>
-			        <th>Add/Delete</th>
-			    </tr>
-			    <?php 
-			        $count = 0;
-			        foreach ( $gp_banner_widget_options as $entry ) {
-			            echo '<tr valign="top">';
-			            echo '<td><input name="linkURL_'.$count.'" type="text" value="'.$entry["linkUrl"].'" /></td>';
-			            echo '<td><input name="largeIMG_'.$count.'" type="text" value="'.$entry["largeImg"].'" /></td>';
-			            echo '<td><input name="smallIMG_'.$count.'" type="text" value="'.$entry["smallImg"].'" /></td>';
-			            echo '<td><button name="delete_entry" class="button-secondary" value="'.$count.'" type="submit">Delete</button></td>';
-			            echo '</tr>';
-			            $count++;
-			        }
+            <h3>Gracepoint Banner Settings</h3>
+            <table class="form-table">
+                <tr valign="top">
+                    <th>Link URL</th>
+                    <th>Large Image</th>
+                    <th>Small Image</th>
+                    <th>Image</th>
+                    <th>Add/Delete</th>
+                </tr>
+                <?php 
+                    $count = 0;
+                    foreach ( $gp_banner_widget_options as $entry ) {
+                        echo '<tr valign="top">';
+                        echo '<td><input name="linkURL_'.$count.'" type="text" value="'.$entry["linkUrl"].'" /></td>';
+                        echo '<td><input name="largeIMG_'.$count.'" type="text" value="'.$entry["largeImg"].'" /></td>';
+                        echo '<td><input name="smallIMG_'.$count.'" type="text" value="'.$entry["smallImg"].'" /></td>';
+                        echo '<td><img src="'.$entry["largeImg"].'" width="200" /></td>';
+                        echo '<td><button name="delete_entry" class="button-secondary" value="'.$count.'" type="submit">Delete</button></td>';
+                        echo '</tr>';
+                        $count++;
+                    }
                 ?>
                 <tr valign="top">
                     <td><input name="<?php echo "linkURL_" . $count; ?>" type="text" /></td>
                     <td><input name="<?php echo "largeIMG_" . $count; ?>" type="text" /></td>
                     <td><input name="<?php echo "smallIMG_" . $count; ?>" type="text" /></td>
+                    <td></td>
                     <td><input type="submit" name="add_entry" class="button-secondary" value="Add" /></td>
                 </tr>  
-			</table>
-			<p class="submit">
-				<input type="submit" name="info_update" class="button-primary" value="Save" />
-			</p>
-			</form>
-		</div>
-	<?php
+            </table>
+            <p class="submit">
+                <input type="submit" name="info_update" class="button-primary" value="Save" />
+            </p>
+            </form>
+        </div>
+    <?php
 }
 
 function register_mysettings() {
-	register_setting( 'gp-banner-widget-settings-group', 'gp-banner-widget-api_key' );
-	register_setting( 'gp-banner-widget-settings-group', 'gp-banner-widget-user_id' );
+    register_setting( 'gp-banner-widget-settings-group', 'gp-banner-widget-api_key' );
+    register_setting( 'gp-banner-widget-settings-group', 'gp-banner-widget-user_id' );
 }
 
 function gp_banner_widget_settings_link($links, $file) {
