@@ -1,11 +1,6 @@
 <?php
 /*
 Plugin Name: Gracepoint Banner Widget
-Plugin URI:https://github.com/michaelshuh/gp-banner
-Description: Plugin to do an "Apple" style rotating image banner in wordpress
-Version: 1.1
-Author: Michael Shuh
-Author URI:https://github.com/michaelshuh
 
 /* License
 
@@ -23,26 +18,26 @@ Author URI:https://github.com/michaelshuh
 
     You should have received a copy of the GNU General Public License
     along with this program.  If not, see <http://www.gnu.org/licenses/>.
-    
+
 */
 include_once dirname( __FILE__ ) . '/gp-banner-widget.php';
 
 function add_settings_page() {
-    add_options_page('GP Banner Widget', 'GP Banner Widget', 'manage_options', 'gp-banner.php', 'settings_page'); 
+    add_options_page('GP Banner Widget', 'GP Banner Widget', 'manage_options', 'gp-banner.php', 'settings_page');
 }
 
 function settings_page() {
-    
+
     $gp_banner_widget_options = get_option( "gp-banner-widget-settings" );
-    
+
     if ( empty($gp_banner_widget_options) ) {
         $gp_banner_widget_options = array();
-    }   
-    
+    }
+
     if (isset($_POST['info_update'])) {
         $count = count( $gp_banner_widget_options );
         $gp_banner_widget_options = array();
-        
+
         for( $i = 0; $i < $count; $i++ ) {
             $linkUrl = $_POST["linkURL_" . $i];
             $largeImg = $_POST["largeIMG_" . $i];
@@ -50,43 +45,34 @@ function settings_page() {
 
             $entry_array = array("linkUrl" => $linkUrl, "largeImg" => $largeImg, "smallImg" => $smallImg);
             array_push( $gp_banner_widget_options, $entry_array );
-        }  
-
-        if (!empty($_POST["largeIMG_" . $count])) {
-            $linkUrl = $_POST["linkURL_" . $count];
-            $largeImg = $_POST["largeIMG_" . $count];
-            $smallImg = $_POST["smallIMG_" . $count];
-
-            $entry_array = array("linkUrl" => $linkUrl, "largeImg" => $largeImg, "smallImg" => $smallImg);
-
-            array_push( $gp_banner_widget_options, $entry_array );
         }
         update_option( 'gp-banner-widget-settings', $gp_banner_widget_options );
-    } 
+        #delete_option( 'gp-banner-widget-settings' );
+    }
 
     if (isset($_POST['add_entry'])) {
         $count = count($gp_banner_widget_options);
-        
+
         $linkUrl = $_POST["linkURL_" . $count];
         $largeImg = $_POST["largeIMG_" . $count];
         $smallImg = $_POST["smallIMG_" . $count];
-        
+
         $entry_array = array("linkUrl" => $linkUrl, "largeImg" => $largeImg, "smallImg" => $smallImg);
-        
+
         array_push( $gp_banner_widget_options, $entry_array );
-        
+
         update_option( 'gp-banner-widget-settings', $gp_banner_widget_options);
     }
-    
+
     if (isset($_POST['delete_entry'])) {
         $entry_id = $_POST['delete_entry'];
         unset($gp_banner_widget_options[$entry_id]);
-        
+
         $gp_banner_widget_options = array_values($gp_banner_widget_options);
-        
+
         update_option( 'gp-banner-widget-settings', $gp_banner_widget_options );
     }
-    
+
     ?>
         <div class="wrap">
             <h2>GP Banner Widget</h2>
@@ -101,7 +87,7 @@ function settings_page() {
                     <th>Image</th>
                     <th>Add/Delete</th>
                 </tr>
-                <?php 
+                <?php
                     $count = 0;
                     foreach ( $gp_banner_widget_options as $entry ) {
                         echo '<tr valign="top">';
@@ -120,7 +106,7 @@ function settings_page() {
                     <td><input name="<?php echo "smallIMG_" . $count; ?>" type="text" /></td>
                     <td></td>
                     <td><input type="submit" name="add_entry" class="button-secondary" value="Add" /></td>
-                </tr>  
+                </tr>
             </table>
             <p class="submit">
                 <input type="submit" name="info_update" class="button-primary" value="Save" />
@@ -137,11 +123,11 @@ function register_mysettings() {
 
 function gp_banner_widget_settings_link($links, $file) {
     static $this_plugin;
- 
+
     if (!$this_plugin) {
         $this_plugin = plugin_basename(__FILE__);
     }
- 
+
     // check to make sure we are on the correct plugin
     if ($file == $this_plugin) {
         // the anchor tag and href to the URL we want. For a "Settings" link, this needs to be the url of your settings page
@@ -149,7 +135,7 @@ function gp_banner_widget_settings_link($links, $file) {
         // add the link to the list
         array_unshift($links, $settings_link);
     }
- 
+
     return $links;
 }
 // Run code and init
